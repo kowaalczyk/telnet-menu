@@ -6,32 +6,18 @@
 #define TELNET_MENU_CONNECTION_H
 
 
-#include <exception>
-#include <cstring>
-#include <string>
-#include <utility>
+#include "logger.h"
 
 namespace server {
-    static const int QUEUE_SIZE = 10;
-
     class connection {
     private:
-        unsigned int port;
+        logger log;
         int sock;
-        struct sockaddr_in server_address;
 
     public:
-        explicit connection(unsigned int port);
-    };
-
-    class connection_exception : public std::exception {
-    private:
-        const std::string message{};
-
-    public:
-        explicit connection_exception(std::string message) : message(std::move(message)) {};
-
-        const char *what() const noexcept override;
+        explicit connection(int sock);
+        connection(int sock, const logger &log);
+        ~connection();
     };
 }
 

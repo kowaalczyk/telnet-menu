@@ -2,8 +2,9 @@
 #include <netinet/in.h>
 #include <zconf.h>
 #include <sstream>
-#include "server/connection.h"
+#include "server/server.h"
 #include "server/logger.h"
+#include "server/connection_exception.h"
 
 
 template<typename T>
@@ -34,7 +35,7 @@ int main(int argc, char * argv[]) {
     log.status("starting on port ", port, "...");
 
     try {
-        auto c = server::connection(port);
+        auto c = server::server(port);
     } catch (server::connection_exception &e) {
         log.error(e.what());
     }
@@ -73,7 +74,7 @@ int main(int argc, char * argv[]) {
 //    printf("accepting client connections on port %hu\n", ntohs(server_address.sin_port));
 //    for (;;) {
 //        client_address_len = sizeof(client_address);
-//        // get client connection from the socket
+//        // get client server from the socket
 //        msg_sock = accept(sock, (struct sockaddr *) &client_address, &client_address_len);
 //        if (msg_sock < 0)
 //            syserr("accept");
@@ -88,7 +89,7 @@ int main(int argc, char * argv[]) {
 //                    syserr("writing to client socket");
 //            }
 //        } while (len > 0);
-//        printf("ending connection\n");
+//        printf("ending server\n");
 //        if (close(msg_sock) < 0)
 //            syserr("close");
 //    }
