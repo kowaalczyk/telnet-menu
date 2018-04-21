@@ -1,0 +1,44 @@
+//
+// Created by kowal on 21.04.18.
+//
+
+#ifndef TELNET_MENU_LOGGER_H
+#define TELNET_MENU_LOGGER_H
+
+
+#include <string>
+#include <iostream>
+
+namespace server {
+    class logger {
+    private:
+        template<typename T>
+        void r_print(T t) {
+            std::cout << t << std::endl;
+        }
+
+        template<typename T, typename... Args>
+        void r_print(T t, Args... args) {
+            std::cout << t;
+            r_print(args...);
+        }
+
+    public:
+        logger() = default;
+
+        template<typename T, typename... Args>
+        void error(T t, Args... args) {
+            std::cout << "[SERVER] ERROR: ";
+            r_print(t, args...);
+        }
+
+        template<typename T, typename... Args>
+        void status(T t, Args... args) {
+            std::cout << "[SERVER] STATUS: ";
+            r_print(t, args...);
+        }
+    };
+}
+
+
+#endif //TELNET_MENU_LOGGER_H
