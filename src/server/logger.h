@@ -8,17 +8,20 @@
 
 #include <string>
 #include <iostream>
+#include <utility>
 
 namespace server {
     class logger {
     private:
+        std::string location;
+
         template<typename T>
-        void r_print(T t) {
+        void r_print(T t) const {
             std::cout << t << std::endl;
         }
 
         template<typename T, typename... Args>
-        void r_print(T t, Args... args) {
+        void r_print(T t, Args... args) const {
             std::cout << t;
             r_print(args...);
         }
@@ -26,15 +29,17 @@ namespace server {
     public:
         logger() = default;
 
+        explicit logger(std::string location) : location(std::move(location)) {}
+
         template<typename T, typename... Args>
-        void error(T t, Args... args) {
-            std::cout << "[SERVER] ERROR: ";
+        void error(T t, Args... args) const {
+            std::cout << "[" << location << "] ERROR: ";
             r_print(t, args...);
         }
 
         template<typename T, typename... Args>
-        void status(T t, Args... args) {
-            std::cout << "[SERVER] STATUS: ";
+        void status(T t, Args... args) const {
+            std::cout << "[" << location << "] STATUS: ";
             r_print(t, args...);
         }
     };

@@ -2,8 +2,8 @@
 // Created by kowal on 21.04.18.
 //
 
-#ifndef TELNET_MENU_SERVER_H
-#define TELNET_MENU_SERVER_H
+#ifndef TELNET_MENU_LISTENER_H
+#define TELNET_MENU_LISTENER_H
 
 
 #include <exception>
@@ -14,22 +14,27 @@
 #include "logger.h"
 
 namespace server {
-    static const int QUEUE_SIZE = 10;
+    static const int QUEUE_SIZE = 5;
 
-    class server {
+    class listener {
     private:
         unsigned int port;
         int sock;
         struct sockaddr_in server_address;
         logger log;
 
+        void check_sock();
+
     public:
-        explicit server(unsigned int port);
-        ~server();
+        listener();
+        explicit listener(unsigned int port);
+        ~listener() = default;
 
         connection next_connection();
+
+        void stop();
     };
 }
 
 
-#endif //TELNET_MENU_SERVER_H
+#endif //TELNET_MENU_LISTENER_H

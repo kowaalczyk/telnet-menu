@@ -13,11 +13,16 @@ namespace server {
     private:
         logger log;
         int sock;
+        bool finished;
 
     public:
         explicit connection(int sock);
         connection(int sock, const logger &log);
         ~connection();
+
+        bool is_finished() const;
+
+        void select();
     };
 }
 
