@@ -42,6 +42,12 @@ namespace server {
             std::cout << "[" << location << "] STATUS: ";
             r_print(t, args...);
         }
+
+        template<typename T, typename... Args>
+        void debug(T t, Args... args) const {
+            std::cout << "[" << location << "] DEBUG: ";
+            r_print(t, args...);
+        }
     };
 }
 

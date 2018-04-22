@@ -7,6 +7,7 @@
 
 
 #include "logger.h"
+#include "menu.h"
 
 namespace server {
     class connection {
@@ -20,9 +21,9 @@ namespace server {
         connection(int sock, const logger &log);
         ~connection();
 
-        bool is_finished() const;
+        void set_up();
 
-        void select();
+        menu create_menu(std::vector<std::string> options, size_t finishing_option);
     };
 }
 

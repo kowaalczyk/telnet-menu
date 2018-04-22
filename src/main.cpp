@@ -6,6 +6,7 @@
 #include "server/listener.h"
 #include "server/logger.h"
 #include "server/connection_exception.h"
+#include "server/menu.h"
 
 
 server::listener srv;
@@ -45,12 +46,45 @@ int main(int argc, char *argv[]) {
     // allow to end the server
     std::signal(SIGINT, sig_handler);
 
+    // prepare menu content
+    std::vector<std::string> menu_options{};
+    menu_options.emplace_back("Opcja A");
+    menu_options.emplace_back("Opcja B");
+    menu_options.emplace_back("Koniec");
+
+    std::vector<std::string> submenu_options{};
+    submenu_options.emplace_back("Opcja B1");
+    submenu_options.emplace_back("Opcja B2");
+    submenu_options.emplace_back("Wstecz");
+
+    size_t menu_exit_option_idx = 2;
+
     // process connections
     while (true) {
         try {
             server::connection c = srv.next_connection();
-            while (!c.is_finished()) {
-                c.select();
+            c.set_up();
+
+            server::menu m = c.create_menu(menu_options, menu_exit_option_idx);
+            while(!m.selected_finish()) {
+                while (!m.is_selected()) {
+                    m.interact();
+                }
+
+                if (m.selected_option() == "Opcja B") {
+                    server::menu sub = c.create_menu(submenu_options, menu_exit_option_idx);
+                    while(!sub.selected_finish()) {
+                        while (!sub.is_selected()) {
+                            sub.interact();
+                        }
+
+                        if (!sub.selected_finish()) {
+                            sub.send_selected_option();
+                        }
+                    }
+                } else if(!m.selected_finish()) {
+                    m.send_selected_option();
+                }
             }
         } catch (server::connection_exception &e) {
             log.error(e.what());
