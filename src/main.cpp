@@ -7,6 +7,7 @@
 #include "server/logger.h"
 #include "server/connection_exception.h"
 #include "server/menu.h"
+#include "server/menu_exception.h"
 
 
 server::listener srv;
@@ -86,6 +87,9 @@ int main(int argc, char *argv[]) {
                     m.send_selected_option();
                 }
             }
+        } catch (server::menu_exception &e) {
+            log.error(e.what());
+            log.status("Connection exception: moving to next connection");
         } catch (server::connection_exception &e) {
             log.error(e.what());
             break;
