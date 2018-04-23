@@ -21,6 +21,8 @@ namespace server {
 
         void select_up();
 
+        void select_confirm();
+
         void select_down();
 
         void select(size_t option);

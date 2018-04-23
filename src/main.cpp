@@ -88,23 +88,16 @@ int main(int argc, char *argv[]) {
                 }
             }
         } catch (server::menu_exception &e) {
+            // this can happen only due to serious logic mistake
             log.error(e.what());
-            log.status("Connection exception: moving to next connection");
+            srv.stop();
+            exit(1);
         } catch (server::connection_exception &e) {
             log.error(e.what());
-            break;
-            // TODO: Should this exit or continue?
+            log.status("Connection exception: moving to next connection");
         }
     }
-    srv.stop();
 
-//    for (;;) {
-//        client_address_len = sizeof(client_address);
-//        // get client listener from the socket
-//        msg_sock = accept(sock, (struct sockaddr *) &client_address, &client_address_len);
-//        if (msg_sock < 0)
-//            syserr("accept");
-//        do {
 //            len = read(msg_sock, buffer, sizeof(buffer));
 //            if (len < 0)
 //                syserr("reading from client socket");
@@ -114,11 +107,7 @@ int main(int argc, char *argv[]) {
 //                if (snd_len != len)
 //                    syserr("writing to client socket");
 //            }
-//        } while (len > 0);
-//        printf("ending listener\n");
-//        if (close(msg_sock) < 0)
-//            syserr("close");
-//    }
 
+    srv.stop();
     return 0;
 }
