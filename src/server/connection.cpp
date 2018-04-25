@@ -5,6 +5,7 @@
 #include <zconf.h>
 #include "connection.h"
 #include "connection_exception.h"
+#include "io.h"
 
 
 namespace server {
@@ -33,7 +34,8 @@ namespace server {
 
 
         // working send: [IAC, DO, LINEMODE, IAC, WILL, ECHO]
-        // [255, 253, 34, 255, ]
+        // [255, 253, 34, 255, 251, 1]
+        io::set_mode(this->sock);
 
         // send [IAC, DO, MODE, CHARACTER]
         // expect [IAC, WILL, MODE, CHARACTER] ==> OK, go on

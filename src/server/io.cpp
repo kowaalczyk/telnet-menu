@@ -13,14 +13,22 @@ namespace server {
         (void) request_buffer;
     }
 
+    void io::set_mode(int fd) {
+        // [255, 253, 34, 255, 251, 1]
+        char mode_codes[7] = "\377\375\042\377\373\001";
+        if (write(fd, mode_codes, 6) != 6) {
+            throw io_exception("invalid write: mode_codes");
+        }
+    }
+
     key io::read_arrow(const std::string &buffer, ssize_t buffer_len) {
         if (buffer[0] != '\x1B' || buffer_len != 3 || buffer[1] != '\x5B') {
             return NOT_RECOGNIZED;
         }
-        if (buffer[2] == 'A') { // arrow up == [27, 91, 65]
+        if (buffer[2] == 'B') { // arrow up == [27, 91, 66]
             return ARROW_UP;
         }
-        if (buffer[2] == 'B') { // arrow down == [27, 91, 66]
+        if (buffer[2] == 'A') { // arrow down == [27, 91, 65]
             return ARROW_DOWN;
         }
         return NOT_RECOGNIZED;
@@ -63,9 +71,9 @@ namespace server {
     }
 
     void io::display_lines(int fd, std::vector<std::string> txt) {
-        if (write(fd, "\x0C\x0D\0", 3) != 3) {
-            // TODO: Constants [FF, CR, NUL], make sure it works
-            throw io_exception("invalid write: [FF, CR, NUL]");
+        char flush[3] = {0x1B, 'c', 0};
+        if (write(fd, flush, 2) != 2) {
+            throw io_exception("invalid write: flush");
         }
         for(const auto &v : txt) {
             append_line(fd, v);
@@ -77,7 +85,7 @@ namespace server {
         size_t len = line.size() + 2;
         std::string line_terminated = line + "\x0D\x0A"; // TODO: Refactor to constants and check CR LF vs CR NUL
         if (write(fd, line_terminated.c_str(), len) != static_cast<ssize_t>(len)) {
-            throw io_exception("invalid write: [message, CR, LF]");
+            throw io_exception("invalid write: [line, CR, LF]");
         }
     }
 }

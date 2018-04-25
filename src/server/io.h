@@ -22,6 +22,8 @@ namespace server {
         static key read_return(const std::string &buffer, ssize_t buffer_len);
 
     public:
+        static void set_mode(int fd);
+
         static key read_key(int fd);
 
         static void display_lines(int fd, std::vector<std::string> txt);
