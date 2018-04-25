@@ -8,6 +8,7 @@
 #include "server/connection_exception.h"
 #include "server/menu.h"
 #include "server/menu_exception.h"
+#include "server/io_exception.h"
 
 
 server::listener srv;
@@ -53,38 +54,35 @@ int main(int argc, char *argv[]) {
     menu_options.emplace_back("Opcja B");
     menu_options.emplace_back("Koniec");
 
+    server::menu main_menu{menu_options, 2};
+
     std::vector<std::string> submenu_options{};
     submenu_options.emplace_back("Opcja B1");
     submenu_options.emplace_back("Opcja B2");
     submenu_options.emplace_back("Wstecz");
 
-    size_t menu_exit_option_idx = 2;
+    server::menu sub_menu{submenu_options, 2};
 
-    // process connectios
     while (true) {
         try {
             server::connection c = srv.next_connection();
-            c.set_up();
+            server::nvt terminal = c.create_nvt(main_menu);
 
-            server::menu m = c.create_menu(menu_options, menu_exit_option_idx);
-            while(!m.selected_finish()) {
-                while (!m.is_selected()) {
-                    m.interact();
-                }
+            while (!terminal.get_menu().selected_finish()) {
+                terminal.interact();
 
-                if (m.selected_option() == "Opcja B") {
-                    server::menu sub = c.create_menu(submenu_options, menu_exit_option_idx);
-                    while(!sub.selected_finish()) {
-                        while (!sub.is_selected()) {
-                            sub.interact();
-                        }
 
-                        if (!sub.selected_finish()) {
-                            sub.send_selected_option();
+                if (terminal.get_menu().is_selected()
+                    && terminal.get_menu().selected_option() == "Opcja B") {
+
+                    terminal.set_menu(sub_menu);
+                    while (!terminal.get_menu().selected_finish()) {
+                        terminal.interact();
+
+                        if (terminal.get_menu().selected_finish()) {
+                            terminal.set_menu(main_menu);
                         }
                     }
-                } else if(!m.selected_finish()) {
-                    m.send_selected_option();
                 }
             }
         } catch (server::menu_exception &e) {
@@ -95,19 +93,11 @@ int main(int argc, char *argv[]) {
         } catch (server::connection_exception &e) {
             log.error(e.what());
             log.status("Connection exception: moving to next connection");
+        } catch (server::io_exception &e) {
+            log.error(e.what());
+            log.status("Connection exception: moving to next connection");
         }
     }
-
-//            len = read(msg_sock, buffer, sizeof(buffer));
-//            if (len < 0)
-//                syserr("reading from client socket");
-//            else {
-//                printf("read from socket: %zd bytes: %.*s\n", len, (int) len, buffer);
-//                snd_len = write(msg_sock, buffer, len);
-//                if (snd_len != len)
-//                    syserr("writing to client socket");
-//            }
-
     srv.stop();
     return 0;
 }

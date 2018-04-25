@@ -8,6 +8,8 @@
 namespace server {
 
     const char *io_exception::what() const noexcept {
-        return strcat(const_cast<char *>("IO ERROR: "), message.c_str());
+        std::string w = "IO ERROR: ";
+        w.append(this->message);
+        return w.c_str();
     }
 }

@@ -9,6 +9,8 @@
 namespace server {
 
     const char *menu_exception::what() const noexcept {
-        return strcat(const_cast<char *>("MENU ERROR: "), message.c_str());
+        std::string w = "MENU ERROR: ";
+        w.append(this->message);
+        return w.c_str();
     }
 }

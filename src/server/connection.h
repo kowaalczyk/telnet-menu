@@ -8,6 +8,7 @@
 
 #include "logger.h"
 #include "menu.h"
+#include "nvt.h"
 
 namespace server {
     class connection {
@@ -21,9 +22,7 @@ namespace server {
         connection(int sock, const logger &log);
         ~connection();
 
-        void set_up();
-
-        menu create_menu(std::vector<std::string> options, size_t finishing_option);
+        nvt create_nvt(menu m);
     };
 }
 
