@@ -15,7 +15,6 @@ namespace server {
         std::vector<std::string> options;
         size_t finishing_option;
         size_t current_option;
-
         bool selected;
         bool selected_finishing_option;
 
@@ -26,6 +25,8 @@ namespace server {
         void select_down();
 
         void select(size_t option);
+
+        std::vector<std::string> sendable_options();
 
     public:
         menu(int fd, std::vector<std::string> options, size_t finishing_option);

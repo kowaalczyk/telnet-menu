@@ -23,7 +23,7 @@ void sig_handler(int signal) {
 int main(int argc, char *argv[]) {
     // check arguments
     if (argc != 2) {
-        std::cout << "USAGE: ./listener PORT" << std::endl;
+        std::cout << "USAGE: ./server PORT" << std::endl;
         exit(1);
     }
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
     size_t menu_exit_option_idx = 2;
 
-    // process connections
+    // process connectios
     while (true) {
         try {
             server::connection c = srv.next_connection();

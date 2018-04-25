@@ -26,7 +26,7 @@ namespace server {
 
         static void display_lines(int fd, std::vector<std::string> txt);
 
-        static void append_line(int fd, const std::string &line);
+        static void append_line(int fd, std::string line);
     };
 }
 

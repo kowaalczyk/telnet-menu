@@ -13,13 +13,17 @@ namespace server {
             fd{fd},
             options{std::move(options)},
             finishing_option{finishing_option},
-            current_option{0} {}
+            current_option{0},
+            selected{false},
+            selected_finishing_option{false} {}
 
     menu::menu(int fd, std::vector<std::string> options, size_t finishing_option, size_t starting_option) :
             fd{fd},
             options{std::move(options)},
             finishing_option{finishing_option},
-            current_option{starting_option} {}
+            current_option{starting_option},
+            selected{false},
+            selected_finishing_option{false} {}
 
     void menu::select_up() {
         if (this->selected) {
@@ -53,7 +57,7 @@ namespace server {
     }
 
     void menu::interact() {
-        io::display_lines(this->fd, this->options);
+        io::display_lines(this->fd, this->sendable_options());
         key msg = io::read_key(this->fd);
 
         switch (msg) {
@@ -89,5 +93,19 @@ namespace server {
 
     void menu::send_selected_option() {
         io::append_line(this->fd, this->selected_option());
+    }
+
+    std::vector<std::string> menu::sendable_options() {
+        std::vector<std::string> ans;
+
+        for (size_t i = 0; i < this->options.size(); i++) {
+            if (i == this->current_option) {
+                std::string selected_option = "* " +  this->options[i];
+                ans.push_back(selected_option);
+            } else {
+                ans.push_back(this->options[i]);
+            }
+        }
+        return std::move(ans);
     }
 }

@@ -29,7 +29,15 @@ namespace server {
         // TODO
         // Use character mode
         // Make sure flushing the screen is possible
-        // Make sure background color of a line can be changed or underline added
+        // Make sure client does not display the keys on its terminal
+
+
+        // working send: [IAC, DO, LINEMODE, IAC, WILL, ECHO]
+        // [255, 253, 34, 255, ]
+
+        // send [IAC, DO, MODE, CHARACTER]
+        // expect [IAC, WILL, MODE, CHARACTER] ==> OK, go on
+        // if not ==> throw exception and exit
     }
 
     menu connection::create_menu(std::vector<std::string> options, size_t finishing_option) {

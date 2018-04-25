@@ -2,22 +2,25 @@
 // Created by kowal on 23.04.18.
 //
 
+#include <cstring>
 #include "io.h"
 
 namespace server {
 
     void io::standard_response(int fd, const std::string &request_buffer) {
         // TODO: Standard response to incoming negotiation
+        (void) fd;
+        (void) request_buffer;
     }
 
     key io::read_arrow(const std::string &buffer, ssize_t buffer_len) {
-        if(buffer[0] != '\x1B' || buffer_len != 3 || buffer[1] != '\x5B') {
+        if (buffer[0] != '\x1B' || buffer_len != 3 || buffer[1] != '\x5B') {
             return NOT_RECOGNIZED;
         }
-        if(buffer[2] == 'A') { // arrow up == [27, 91, 65]
+        if (buffer[2] == 'A') { // arrow up == [27, 91, 65]
             return ARROW_UP;
         }
-        if(buffer[2] == 'B') { // arrow down == [27, 91, 66]
+        if (buffer[2] == 'B') { // arrow down == [27, 91, 66]
             return ARROW_DOWN;
         }
         return NOT_RECOGNIZED;
@@ -60,11 +63,21 @@ namespace server {
     }
 
     void io::display_lines(int fd, std::vector<std::string> txt) {
-        // TODO: Flush screen - telnet FF
-        // TODO: Send text
+        if (write(fd, "\x0C\x0D\0", 3) != 3) {
+            // TODO: Constants [FF, CR, NUL], make sure it works
+            throw io_exception("invalid write: [FF, CR, NUL]");
+        }
+        for(const auto &v : txt) {
+            append_line(fd, v);
+        }
     }
 
-    void io::append_line(int fd, const std::string &line) {
-        // TODO: Send line (without flushing)
+    // send a line without flushing screen
+    void io::append_line(int fd, std::string line) {
+        size_t len = line.size() + 2;
+        std::string line_terminated = line + "\x0D\x0A"; // TODO: Refactor to constants and check CR LF vs CR NUL
+        if (write(fd, line_terminated.c_str(), len) != static_cast<ssize_t>(len)) {
+            throw io_exception("invalid write: [message, CR, LF]");
+        }
     }
 }
