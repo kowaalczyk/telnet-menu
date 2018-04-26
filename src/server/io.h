@@ -24,8 +24,6 @@ namespace server {
         static void append_line(int fd, std::string line);
 
     private:
-        static void standard_response(int fd, const std::string &request_buffer);
-
         static key read_arrow(const std::string &buffer, ssize_t buffer_len);
 
         static key read_return(const std::string &buffer, ssize_t buffer_len);

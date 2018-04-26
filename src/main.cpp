@@ -1,12 +1,11 @@
 #include <iostream>
-#include <netinet/in.h>
 #include <zconf.h>
 #include <sstream>
 #include <csignal>
 #include "server/listener.h"
+#include "server/menu.h"
 #include "server/logger.h"
 #include "server/connection_exception.h"
-#include "server/menu.h"
 #include "server/menu_exception.h"
 #include "server/io_exception.h"
 

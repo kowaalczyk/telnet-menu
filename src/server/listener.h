@@ -10,6 +10,7 @@
 #include <cstring>
 #include <string>
 #include <utility>
+#include <netinet/in.h>
 #include "connection.h"
 #include "logger.h"
 
