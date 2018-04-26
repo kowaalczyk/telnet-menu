@@ -25,7 +25,7 @@ namespace server {
         this->server_address.sin_family = AF_INET;
         this->server_address.sin_addr.s_addr = htonl(INADDR_ANY);
         this->server_address.sin_port = htons(static_cast<uint16_t>(port));
-        if (bind(this->sock, (sockaddr *)(&(this->server_address)), sizeof(this->server_address)) < 0) {
+        if (bind(this->sock, (sockaddr *) (&(this->server_address)), sizeof(this->server_address)) < 0) {
             log.error(std::strerror(errno));
             throw connection_exception("Failed to bind socket to address");
         }
@@ -38,13 +38,6 @@ namespace server {
         log.status("Listening on port ", this->port, ", press Ctrl+C to stop.");
     }
 
-    void listener::check_sock() {
-        if (this->sock < 0) {
-            log.error(std::strerror(errno));
-            throw connection_exception("bad socket");
-        }
-    }
-
     connection listener::next_connection() {
         log.status("Waiting for next connection...");
 
@@ -52,7 +45,7 @@ namespace server {
 
         struct sockaddr_in client_address{};
         socklen_t client_address_len = sizeof(client_address);
-        int msg_sock = accept(this->sock, (sockaddr *)(&client_address), &client_address_len);
+        int msg_sock = accept(this->sock, (sockaddr *) (&client_address), &client_address_len);
         if (msg_sock < 0) {
             log.error(std::strerror(errno));
             throw connection_exception("Failed to accept a connection on listener socket");
@@ -67,9 +60,16 @@ namespace server {
 
         check_sock();
 
-        if(close(this->sock) < 0) {
+        if (close(this->sock) < 0) {
             log.error("Failed to close socket ", this->sock);
         }
         log.status("Stopped");
+    }
+
+    void listener::check_sock() {
+        if (this->sock < 0) {
+            log.error(std::strerror(errno));
+            throw connection_exception("bad socket");
+        }
     }
 }

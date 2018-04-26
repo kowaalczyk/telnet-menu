@@ -6,7 +6,9 @@
 
 
 namespace server {
-    const char * connection_exception::what() const noexcept {
-        return strcat(const_cast<char *>("CONNECTION ERROR: "), message.c_str());
+    const char *connection_exception::what() const noexcept {
+        std::string w = "CONNECTION ERROR: ";
+        w.append(this->message);
+        return w.c_str();
     }
 }

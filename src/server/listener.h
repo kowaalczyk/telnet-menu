@@ -17,6 +17,15 @@ namespace server {
     static const int QUEUE_SIZE = 5;
 
     class listener {
+    public:
+        listener();
+
+        explicit listener(unsigned int port);
+
+        connection next_connection();
+
+        void stop();
+
     private:
         unsigned int port;
         int sock;
@@ -24,15 +33,6 @@ namespace server {
         logger log;
 
         void check_sock();
-
-    public:
-        listener();
-        explicit listener(unsigned int port);
-        ~listener() = default;
-
-        connection next_connection();
-
-        void stop();
     };
 }
 

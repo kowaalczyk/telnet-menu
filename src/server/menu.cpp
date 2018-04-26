@@ -9,19 +9,25 @@
 
 
 namespace server {
-    menu::menu(int fd, std::vector<std::string> options, size_t finishing_option) :
-            fd{fd},
+
+    menu::menu(std::vector<std::string> options, size_t finishing_option) :
             options{std::move(options)},
             finishing_option{finishing_option},
             current_option{0},
             selected{false},
             selected_finishing_option{false} {}
 
-    menu::menu(int fd, std::vector<std::string> options, size_t finishing_option, size_t starting_option) :
-            fd{fd},
+    menu::menu(std::vector<std::string> options, size_t finishing_option, size_t starting_option) :
             options{std::move(options)},
             finishing_option{finishing_option},
             current_option{starting_option},
+            selected{false},
+            selected_finishing_option{false} {}
+
+    menu::menu(const menu &other) :
+            options{other.options},
+            finishing_option{other.finishing_option},
+            current_option{0},
             selected{false},
             selected_finishing_option{false} {}
 
@@ -56,43 +62,19 @@ namespace server {
         this->current_option = option;
     }
 
-    void menu::interact() {
-        io::display_lines(this->fd, this->sendable_options());
-        key msg = io::read_key(this->fd);
-
-        switch (msg) {
-            case ARROW_UP:
-                this->select_up();
-                break;
-            case ARROW_DOWN:
-                this->select_down();
-                break;
-            case RETURN:
-                this->select_confirm();
-                break;
-            default:
-                // ignore
-                break;
-        }
-    }
-
-    bool menu::is_selected() {
+    bool menu::is_selected() const {
         return this->selected;
     }
 
-    bool menu::selected_finish() {
+    bool menu::selected_finish() const {
         return this->selected && this->selected_finishing_option;
     }
 
-    std::string menu::selected_option() {
+    std::string menu::selected_option() const {
         if (!this->selected) {
             throw menu_exception("menu is not selected");
         }
         return this->options[this->current_option];
-    }
-
-    void menu::send_selected_option() {
-        io::append_line(this->fd, this->selected_option());
     }
 
     std::vector<std::string> menu::sendable_options() {
@@ -100,12 +82,17 @@ namespace server {
 
         for (size_t i = 0; i < this->options.size(); i++) {
             if (i == this->current_option) {
-                std::string selected_option = "* " +  this->options[i];
+                std::string selected_option = "* " + this->options[i];
                 ans.push_back(selected_option);
             } else {
                 ans.push_back(this->options[i]);
             }
         }
         return std::move(ans);
+    }
+
+    void menu::reset_selection() {
+        this->selected = false;
+        this->selected_finishing_option = false;
     }
 }

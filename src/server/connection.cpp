@@ -6,6 +6,7 @@
 #include "connection.h"
 #include "connection_exception.h"
 #include "io.h"
+#include "nvt.h"
 
 
 namespace server {
@@ -26,23 +27,8 @@ namespace server {
         }
     }
 
-    void connection::set_up() {
-        // TODO
-        // Use character mode
-        // Make sure flushing the screen is possible
-        // Make sure client does not display the keys on its terminal
-
-
-        // working send: [IAC, DO, LINEMODE, IAC, WILL, ECHO]
-        // [255, 253, 34, 255, 251, 1]
-        io::set_mode(this->sock);
-
-        // send [IAC, DO, MODE, CHARACTER]
-        // expect [IAC, WILL, MODE, CHARACTER] ==> OK, go on
-        // if not ==> throw exception and exit
-    }
-
-    menu connection::create_menu(std::vector<std::string> options, size_t finishing_option) {
-        return menu(this->sock, std::move(options), finishing_option);
+    nvt connection::create_nvt(menu m) {
+        io::set_mode(this->sock);  // negotiate mode
+        return nvt(this->sock, m);
     }
 }

@@ -10,38 +10,37 @@
 
 namespace server {
     class menu {
+    public:
+        menu(std::vector<std::string> options, size_t finishing_option);
+
+        menu(std::vector<std::string> options, size_t finishing_option, size_t starting_option);
+
+        menu(const menu &other);
+
+        void select_up();
+
+        void select_down();
+
+        void select_confirm();
+
+        void select(size_t option);
+
+        void reset_selection();
+
+        bool is_selected() const;
+
+        bool selected_finish() const;
+
+        std::vector<std::string> sendable_options();
+
+        std::string selected_option() const;
+
     private:
-        int fd;
         std::vector<std::string> options;
         size_t finishing_option;
         size_t current_option;
         bool selected;
         bool selected_finishing_option;
-
-        void select_up();
-
-        void select_confirm();
-
-        void select_down();
-
-        void select(size_t option);
-
-        std::vector<std::string> sendable_options();
-
-    public:
-        menu(int fd, std::vector<std::string> options, size_t finishing_option);
-
-        menu(int fd, std::vector<std::string> options, size_t finishing_option, size_t starting_option);
-
-        void interact();
-
-        bool is_selected();
-
-        bool selected_finish();
-
-        std::string selected_option();
-
-        void send_selected_option();
     };
 }
 
