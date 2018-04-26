@@ -11,13 +11,13 @@
 namespace server {
     class nvt {
     public:
-        nvt(int fd, const menu m);
+        nvt(int fd, menu m);
 
         nvt(int fd, const menu &m, const std::string &msg);
 
         const menu &get_menu() const;
 
-        void set_menu(const menu m);
+        void set_menu(menu m);
 
         const std::string &get_msg() const;
 

@@ -91,4 +91,8 @@ namespace server {
             selected{false},
             selected_finishing_option{false} {}
 
+    void menu::reset_selection() {
+        this->selected = false;
+        this->selected_finishing_option = false;
+    }
 }

@@ -71,18 +71,14 @@ int main(int argc, char *argv[]) {
             while (!terminal.get_menu().selected_finish()) {
                 terminal.interact();
 
-
                 if (terminal.get_menu().is_selected()
                     && terminal.get_menu().selected_option() == "Opcja B") {
 
                     terminal.set_menu(sub_menu);
                     while (!terminal.get_menu().selected_finish()) {
                         terminal.interact();
-
-                        if (terminal.get_menu().selected_finish()) {
-                            terminal.set_menu(main_menu);
-                        }
                     }
+                    terminal.set_menu(main_menu);
                 }
             }
         } catch (server::menu_exception &e) {

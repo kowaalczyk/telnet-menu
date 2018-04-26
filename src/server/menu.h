@@ -38,6 +38,8 @@ namespace server {
         void select_down();
 
         void select(size_t option);
+
+        void reset_selection();
     };
 }
 

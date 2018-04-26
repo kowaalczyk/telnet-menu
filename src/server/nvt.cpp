@@ -32,6 +32,10 @@ void server::nvt::set_msg(const std::string &msg) {
 }
 
 void server::nvt::interact() {
+    if (this->m.is_selected()) {
+        this->m.reset_selection();
+    }
+
     std::vector<std::string> lines = this->m.sendable_options();
     lines.push_back(this->msg);
 
