@@ -11,13 +11,13 @@
 
 namespace server {
     class connection_exception : public std::exception {
-    private:
-        const std::string message{};
-
     public:
         explicit connection_exception(std::string message) : message(std::move(message)) {};
 
         const char *what() const noexcept override;
+
+    private:
+        const std::string message{};
     };
 }
 

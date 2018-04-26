@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     }
 
     // prepare for server creation
-    server::logger log;
+    server::logger log{"SERVER"};
     unsigned int port;
     std::istringstream ss(argv[1]);
     if (!(ss >> port) || port > UINT16_MAX) {
@@ -71,9 +71,7 @@ int main(int argc, char *argv[]) {
             while (!terminal.get_menu().selected_finish()) {
                 terminal.interact();
 
-                if (terminal.get_menu().is_selected()
-                    && terminal.get_menu().selected_option() == "Opcja B") {
-
+                if (terminal.get_menu().is_selected() && terminal.get_menu().selected_option() == "Opcja B") {
                     terminal.set_menu(sub_menu);
                     while (!terminal.get_menu().selected_finish()) {
                         terminal.interact();

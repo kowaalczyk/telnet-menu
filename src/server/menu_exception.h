@@ -10,13 +10,13 @@
 
 namespace server {
     class menu_exception : public std::exception {
-    private:
-        const std::string message{};
-
     public:
         explicit menu_exception(std::string message) : message(std::move(message)) {};
 
         const char *what() const noexcept override;
+
+    private:
+        const std::string message{};
     };
 }
 

@@ -24,6 +24,13 @@ namespace server {
             selected{false},
             selected_finishing_option{false} {}
 
+    menu::menu(const menu &other) :
+            options{other.options},
+            finishing_option{other.finishing_option},
+            current_option{0},
+            selected{false},
+            selected_finishing_option{false} {}
+
     void menu::select_up() {
         if (this->selected) {
             throw menu_exception("cannot change selection in menu that was already selected");
@@ -83,13 +90,6 @@ namespace server {
         }
         return std::move(ans);
     }
-
-    menu::menu(const menu &other) :
-            options{other.options},
-            finishing_option{other.finishing_option},
-            current_option{0},
-            selected{false},
-            selected_finishing_option{false} {}
 
     void menu::reset_selection() {
         this->selected = false;

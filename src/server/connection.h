@@ -12,17 +12,19 @@
 
 namespace server {
     class connection {
+    public:
+        explicit connection(int sock);
+
+        connection(int sock, const logger &log);
+
+        ~connection();
+
+        nvt create_nvt(menu m);
+
     private:
         logger log;
         int sock;
         bool finished;
-
-    public:
-        explicit connection(int sock);
-        connection(int sock, const logger &log);
-        ~connection();
-
-        nvt create_nvt(menu m);
     };
 }
 
