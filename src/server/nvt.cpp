@@ -51,8 +51,10 @@ void server::nvt::interact() {
             break;
         case RETURN:
             this->m.select_confirm();
-            if (this->m.is_selected()) {
-                this->set_msg(this->m.selected_option());
+            if (this->m.selected_finish()) {
+                this->set_msg(""); // not displaying finished or return options when they are selected
+            } else {
+                this->set_msg("SELECTED: " + this->m.selected_option());
             }
             break;
         default:

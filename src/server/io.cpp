@@ -8,8 +8,6 @@
 namespace server {
 
     void io::set_mode(int fd) {
-        // TODO: Check if response is correct (try to force or ignore and notify)
-
         // [255, 253, 34, 255, 251, 1]
         char mode_codes[7] = "\377\375\042\377\373\001";
         if (write(fd, mode_codes, 6) != 6) {
@@ -33,7 +31,7 @@ namespace server {
         switch (buffer[0]) {
             case '\xFF':
                 // IAC
-                standard_response(fd, std::string(buffer));
+                // ignoring it should not result in changing nvt mode
                 return NOT_RECOGNIZED;
             case '\x1B':
                 // arrow (probably)
